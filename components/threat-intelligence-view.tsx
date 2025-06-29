@@ -1,382 +1,298 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Brain, Shield, AlertTriangle, TrendingUp, Download, RefreshCw, Globe, Users } from "lucide-react"
 import {
-  Brain,
-  Shield,
-  TrendingUp,
-  Globe,
-  AlertTriangle,
-  FileText,
-  Download,
-  RefreshCw,
-  Eye,
-  Target,
-} from "lucide-react"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts"
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+} from "recharts"
 
-const threatTrends = [
-  { month: "Jan", malware: 45, phishing: 32, ddos: 23, insider: 12 },
-  { month: "Feb", malware: 52, phishing: 28, ddos: 31, insider: 15 },
-  { month: "Mar", malware: 48, phishing: 35, ddos: 27, insider: 18 },
-  { month: "Apr", malware: 61, phishing: 42, ddos: 34, insider: 22 },
-  { month: "May", malware: 55, phishing: 38, ddos: 29, insider: 19 },
-  { month: "Jun", malware: 67, phishing: 45, ddos: 38, insider: 25 },
+const threatTrendData = [
+  { month: "Jul", malware: 120, phishing: 85, ddos: 45, intrusion: 30 },
+  { month: "Aug", malware: 135, phishing: 92, ddos: 52, intrusion: 38 },
+  { month: "Sep", malware: 148, phishing: 78, ddos: 48, intrusion: 42 },
+  { month: "Oct", malware: 162, phishing: 95, ddos: 55, intrusion: 35 },
+  { month: "Nov", malware: 178, phishing: 110, ddos: 62, intrusion: 48 },
+  { month: "Dec", malware: 195, phishing: 125, ddos: 58, intrusion: 52 },
 ]
 
 const cveData = [
-  { severity: "Critical", count: 23, color: "#ef4444" },
-  { severity: "High", count: 45, color: "#f97316" },
-  { severity: "Medium", count: 67, color: "#eab308" },
-  { severity: "Low", count: 34, color: "#22c55e" },
+  { severity: "Critical", count: 15, color: "#dc2626" },
+  { severity: "High", count: 42, color: "#ea580c" },
+  { severity: "Medium", count: 78, color: "#ca8a04" },
+  { severity: "Low", count: 125, color: "#16a34a" },
 ]
 
-const threatFeeds = [
-  { name: "MITRE ATT&CK", status: "Active", lastUpdate: "2 hours ago", threats: 1247 },
-  { name: "AlienVault OTX", status: "Active", lastUpdate: "1 hour ago", threats: 892 },
-  { name: "VirusTotal", status: "Active", lastUpdate: "30 min ago", threats: 2341 },
-  { name: "Emerging Threats", status: "Maintenance", lastUpdate: "6 hours ago", threats: 567 },
-  { name: "Talos Intelligence", status: "Active", lastUpdate: "45 min ago", threats: 1089 },
-]
-
-const attackPatterns = [
-  {
-    id: "T1566.001",
-    name: "Spearphishing Attachment",
-    tactic: "Initial Access",
-    confidence: 85,
-    detections: 23,
-    description: "Adversaries may send spearphishing emails with a malicious attachment",
-  },
-  {
-    id: "T1055",
-    name: "Process Injection",
-    tactic: "Defense Evasion",
-    confidence: 92,
-    detections: 18,
-    description: "Adversaries may inject code into processes to evade detection",
-  },
-  {
-    id: "T1083",
-    name: "File and Directory Discovery",
-    tactic: "Discovery",
-    confidence: 78,
-    detections: 34,
-    description: "Adversaries may enumerate files and directories",
-  },
-  {
-    id: "T1021.001",
-    name: "Remote Desktop Protocol",
-    tactic: "Lateral Movement",
-    confidence: 88,
-    detections: 12,
-    description: "Adversaries may use RDP to laterally move",
-  },
-]
-
-const adversaryProfiles = [
-  {
-    name: "APT29 (Cozy Bear)",
-    origin: "Russia",
-    targets: "Government, Healthcare",
-    lastSeen: "3 days ago",
-    riskLevel: "Critical",
-    techniques: ["T1566.001", "T1055", "T1083"],
-  },
-  {
-    name: "Lazarus Group",
-    origin: "North Korea",
-    targets: "Financial, Cryptocurrency",
-    lastSeen: "1 week ago",
-    riskLevel: "High",
-    techniques: ["T1021.001", "T1566.001", "T1055"],
-  },
-  {
-    name: "FIN7",
-    origin: "Unknown",
-    targets: "Retail, Hospitality",
-    lastSeen: "2 weeks ago",
-    riskLevel: "High",
-    techniques: ["T1566.001", "T1083", "T1021.001"],
-  },
+const attackPatternData = [
+  { pattern: "Credential Stuffing", frequency: 85 },
+  { pattern: "SQL Injection", frequency: 72 },
+  { pattern: "Cross-Site Scripting", frequency: 68 },
+  { pattern: "Brute Force", frequency: 65 },
+  { pattern: "Man-in-the-Middle", frequency: 45 },
+  { pattern: "DNS Spoofing", frequency: 38 },
 ]
 
 export function ThreatIntelligenceView() {
-  const getRiskColor = (risk: string) => {
-    switch (risk) {
-      case "Critical":
-        return "destructive"
-      case "High":
-        return "destructive"
-      case "Medium":
-        return "default"
-      case "Low":
-        return "secondary"
-      default:
-        return "default"
-    }
-  }
-
   return (
     <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold">Threat Intelligence</h1>
+          <p className="text-muted-foreground">Global cybersecurity insights and threat landscape analysis</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Update Feeds
+          </Button>
+          <Button className="bg-blue-600 hover:bg-blue-700">
+            <Download className="mr-2 h-4 w-4" />
+            Generate Report
+          </Button>
+        </div>
+      </div>
+
       {/* Intelligence Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Brain className="h-5 w-5 text-blue-600" />
-              <div>
-                <p className="text-2xl font-bold">5,234</p>
-                <p className="text-sm text-muted-foreground">Threat Indicators</p>
-              </div>
-            </div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Threat Score</CardTitle>
+            <Brain className="h-4 w-4 text-red-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">High</div>
+            <p className="text-xs text-muted-foreground">
+              <TrendingUp className="inline h-3 w-3 mr-1" />
+              +15% this week
+            </p>
+            <Progress value={78} className="mt-2" />
           </CardContent>
         </Card>
+
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-red-600" />
-              <div>
-                <p className="text-2xl font-bold">169</p>
-                <p className="text-sm text-muted-foreground">Active CVEs</p>
-              </div>
-            </div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Campaigns</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-orange-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">12</div>
+            <p className="text-xs text-muted-foreground">Global threat campaigns</p>
           </CardContent>
         </Card>
+
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Globe className="h-5 w-5 text-green-600" />
-              <div>
-                <p className="text-2xl font-bold">5</p>
-                <p className="text-sm text-muted-foreground">Threat Feeds</p>
-              </div>
-            </div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">IOCs Tracked</CardTitle>
+            <Shield className="h-4 w-4 text-blue-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">2,847</div>
+            <p className="text-xs text-muted-foreground">Indicators of Compromise</p>
           </CardContent>
         </Card>
+
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-purple-600" />
-              <div>
-                <p className="text-2xl font-bold">23</p>
-                <p className="text-sm text-muted-foreground">Known Adversaries</p>
-              </div>
-            </div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Feed Sources</CardTitle>
+            <Globe className="h-4 w-4 text-green-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">15</div>
+            <p className="text-xs text-muted-foreground">Active intelligence feeds</p>
           </CardContent>
         </Card>
       </div>
 
-      <Tabs defaultValue="trends" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="trends">Threat Trends</TabsTrigger>
-          <TabsTrigger value="feeds">Intelligence Feeds</TabsTrigger>
-          <TabsTrigger value="patterns">Attack Patterns</TabsTrigger>
-          <TabsTrigger value="adversaries">Adversary Profiles</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="trends" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
-                  Threat Trends (6 Months)
-                </CardTitle>
-                <CardDescription>Evolution of different threat types over time</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={threatTrends}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="malware" stroke="#ef4444" strokeWidth={2} name="Malware" />
-                    <Line type="monotone" dataKey="phishing" stroke="#f97316" strokeWidth={2} name="Phishing" />
-                    <Line type="monotone" dataKey="ddos" stroke="#eab308" strokeWidth={2} name="DDoS" />
-                    <Line type="monotone" dataKey="insider" stroke="#22c55e" strokeWidth={2} name="Insider" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>CVE Distribution by Severity</CardTitle>
-                <CardDescription>Current vulnerabilities requiring attention</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={cveData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="severity" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="#3b82f6" />
-                  </BarChart>
-                </ResponsiveContainer>
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {cveData.map((item) => (
-                    <div key={item.severity} className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-                      <span className="text-xs">
-                        {item.severity}: {item.count}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="feeds" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Globe className="h-5 w-5" />
-                Threat Intelligence Feeds
-              </CardTitle>
-              <CardDescription>External threat intelligence sources and their status</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {threatFeeds.map((feed) => (
-                  <div key={feed.name} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full">
-                        <Globe className="h-4 w-4 text-blue-600" />
-                      </div>
-                      <div>
-                        <p className="font-medium">{feed.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {feed.threats.toLocaleString()} indicators • Last update: {feed.lastUpdate}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant={feed.status === "Active" ? "default" : "secondary"}>{feed.status}</Badge>
-                      <Button variant="outline" size="sm">
-                        <RefreshCw className="h-4 w-4 mr-1" />
-                        Update
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="patterns" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5" />
-                MITRE ATT&CK Patterns
-              </CardTitle>
-              <CardDescription>Common attack patterns detected in your environment</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {attackPatterns.map((pattern) => (
-                  <div key={pattern.id} className="p-4 border rounded-lg">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <Badge variant="outline">{pattern.id}</Badge>
-                          <Badge>{pattern.tactic}</Badge>
-                        </div>
-                        <h4 className="font-medium">{pattern.name}</h4>
-                        <p className="text-sm text-muted-foreground mt-1">{pattern.description}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium">{pattern.detections} detections</p>
-                        <p className="text-xs text-muted-foreground">Last 30 days</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">Confidence:</span>
-                      <Progress value={pattern.confidence} className="flex-1" />
-                      <span className="text-sm font-medium">{pattern.confidence}%</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="adversaries" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5" />
-                Known Adversary Groups
-              </CardTitle>
-              <CardDescription>Threat actors relevant to your organization</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {adversaryProfiles.map((adversary) => (
-                  <div key={adversary.name} className="p-4 border rounded-lg">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h4 className="font-medium text-lg">{adversary.name}</h4>
-                        <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                          <span>Origin: {adversary.origin}</span>
-                          <span>Targets: {adversary.targets}</span>
-                          <span>Last seen: {adversary.lastSeen}</span>
-                        </div>
-                      </div>
-                      <Badge variant={getRiskColor(adversary.riskLevel) as any}>{adversary.riskLevel} Risk</Badge>
-                    </div>
-                    <div>
-                      <p className="text-sm mb-2">Common Techniques:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {adversary.techniques.map((technique) => (
-                          <Badge key={technique} variant="outline" className="text-xs">
-                            {technique}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-
-      {/* Quick Actions */}
+      {/* Threat Evolution */}
       <Card>
         <CardHeader>
-          <CardTitle>Intelligence Actions</CardTitle>
+          <CardTitle>Threat Landscape Evolution</CardTitle>
+          <CardDescription>6-month trend analysis of major threat categories</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap gap-3">
-            <Button>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Update All Feeds
-            </Button>
-            <Button variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export Report
-            </Button>
-            <Button variant="outline">
-              <Eye className="h-4 w-4 mr-2" />
-              View IOCs
-            </Button>
-            <Button variant="outline">
-              <FileText className="h-4 w-4 mr-2" />
-              Generate Brief
-            </Button>
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart data={threatTrendData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Line type="monotone" dataKey="malware" stroke="#dc2626" strokeWidth={2} name="Malware" />
+              <Line type="monotone" dataKey="phishing" stroke="#ea580c" strokeWidth={2} name="Phishing" />
+              <Line type="monotone" dataKey="ddos" stroke="#ca8a04" strokeWidth={2} name="DDoS" />
+              <Line type="monotone" dataKey="intrusion" stroke="#16a34a" strokeWidth={2} name="Intrusion" />
+            </LineChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      {/* CVE Analysis and Attack Patterns */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>CVE Distribution</CardTitle>
+            <CardDescription>Current vulnerabilities by severity level</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={cveData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  fill="#8884d8"
+                  dataKey="count"
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                >
+                  {cveData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Common Attack Patterns</CardTitle>
+            <CardDescription>MITRE ATT&CK framework analysis</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={attackPatternData} layout="horizontal">
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" />
+                <YAxis dataKey="pattern" type="category" width={120} />
+                <Tooltip />
+                <Bar dataKey="frequency" fill="#3b82f6" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Intelligence Feeds */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Intelligence Feed Status</CardTitle>
+          <CardDescription>External threat intelligence sources and their current status</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { name: "MISP Threat Sharing", status: "Active", lastUpdate: "2 min ago", threats: 1247 },
+              { name: "AlienVault OTX", status: "Active", lastUpdate: "5 min ago", threats: 892 },
+              { name: "VirusTotal", status: "Active", lastUpdate: "1 min ago", threats: 2156 },
+              { name: "Shodan", status: "Active", lastUpdate: "8 min ago", threats: 445 },
+              { name: "IBM X-Force", status: "Maintenance", lastUpdate: "2 hours ago", threats: 678 },
+              { name: "Recorded Future", status: "Active", lastUpdate: "3 min ago", threats: 1534 },
+            ].map((feed) => (
+              <div key={feed.name} className="p-4 border rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-medium">{feed.name}</h4>
+                  <Badge variant={feed.status === "Active" ? "default" : "secondary"}>{feed.status}</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground mb-1">Last update: {feed.lastUpdate}</p>
+                <p className="text-sm font-medium">{feed.threats.toLocaleString()} active threats</p>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Adversary Profiles */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Known Adversary Profiles</CardTitle>
+          <CardDescription>Active threat actors and their characteristics</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {[
+              {
+                name: "APT29 (Cozy Bear)",
+                origin: "Russia",
+                targets: "Government, Healthcare",
+                techniques: ["Spear Phishing", "Living off the Land", "Supply Chain"],
+                activity: "High",
+                lastSeen: "3 days ago",
+              },
+              {
+                name: "Lazarus Group",
+                origin: "North Korea",
+                targets: "Financial, Cryptocurrency",
+                techniques: ["Watering Hole", "Custom Malware", "Social Engineering"],
+                activity: "Medium",
+                lastSeen: "1 week ago",
+              },
+              {
+                name: "FIN7",
+                origin: "Unknown",
+                targets: "Retail, Hospitality",
+                techniques: ["Point of Sale", "Fileless Malware", "Credential Theft"],
+                activity: "Low",
+                lastSeen: "2 weeks ago",
+              },
+            ].map((adversary) => (
+              <div key={adversary.name} className="p-4 border rounded-lg">
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <h4 className="font-medium text-lg">{adversary.name}</h4>
+                    <p className="text-sm text-muted-foreground">Origin: {adversary.origin}</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Badge
+                      variant={
+                        adversary.activity === "High"
+                          ? "destructive"
+                          : adversary.activity === "Medium"
+                            ? "secondary"
+                            : "outline"
+                      }
+                    >
+                      {adversary.activity} Activity
+                    </Badge>
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <p className="font-medium mb-1">Primary Targets</p>
+                    <p className="text-muted-foreground">{adversary.targets}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium mb-1">Common Techniques</p>
+                    <div className="flex flex-wrap gap-1">
+                      {adversary.techniques.map((technique) => (
+                        <Badge key={technique} variant="outline" className="text-xs">
+                          {technique}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="font-medium mb-1">Last Activity</p>
+                    <p className="text-muted-foreground">{adversary.lastSeen}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
