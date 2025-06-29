@@ -1,30 +1,45 @@
-# Cybersecurity Threat Detector
+# AI-Enhanced Cybersecurity Threat Detector
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+This project is a web-based dashboard for detecting and visualizing potential cybersecurity threats using AI models. The system is designed to process and analyze network traffic and system logs, using transformer-based models to identify anomalies and predict attacks before they occur.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/kenneth-kariukis-projects-0725a08c/v0-cybersecurity-threat-detector)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/nf1pEyPgc6h)
+The frontend is fully developed and deployed. The backend and AI model integration are currently under development. The UI is optimized for real-time monitoring and system status visualization.
 
-## Overview
+## Tech Stack
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+### Frontend
+- **Framework:** Next.js (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **UI Components:** Shadcn UI
+- **State Management:** React (useState, useEffect, etc.)
+- **Deployment:** Vercel
+- **Visualization:** (Planned) Chart.js or D3.js
 
-## Deployment
+### Backend (Planned)
+- **Framework:** Python (FastAPI or Flask)
+- **AI Models:** Transformer models (BERT, GPT via Hugging Face)
+- **Libraries:** PyTorch or TensorFlow
+- **Streaming:** Apache Kafka or WebSocket for real-time data
+- **Database:** PostgreSQL, MongoDB, or Elasticsearch
+- **Containerization:** Docker
+- **CI/CD:** GitHub Actions
 
-Your project is live at:
+## Features (Frontend)
+- Dashboard for viewing threat alerts and system status
+- Placeholder integration for AI-driven anomaly detection
+- Responsive design for desktop and mobile views
+- Modular and scalable component structure using Shadcn UI
 
-**[https://vercel.com/kenneth-kariukis-projects-0725a08c/v0-cybersecurity-threat-detector](https://vercel.com/kenneth-kariukis-projects-0725a08c/v0-cybersecurity-threat-detector)**
+## Getting Started
 
-## Build your app
+To contribute or run the project locally:
 
-Continue building your app on:
+### Prerequisites
+- Node.js (v18 or higher)
+- Git
 
-**[https://v0.dev/chat/projects/nf1pEyPgc6h](https://v0.dev/chat/projects/nf1pEyPgc6h)**
+### Clone the Repository
 
-## How It Works
-
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+```bash
+git clone https://github.com/your-username/cybersecurity-threat-detector.git
+cd cybersecurity-threat-detector
