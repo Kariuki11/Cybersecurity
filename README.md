@@ -37,9 +37,3 @@ To contribute or run the project locally:
 ### Prerequisites
 - Node.js (v18 or higher)
 - Git
-
-### Clone the Repository
-
-```bash
-git clone https://github.com/your-username/cybersecurity-threat-detector.git
-cd cybersecurity-threat-detector
